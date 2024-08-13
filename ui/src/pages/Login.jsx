@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../assets/logo.png';
+import logo from '../assets/logo-transparente.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ const Login = () => {
     console.log('Password:', password);
 
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch('/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,6 +27,7 @@ const Login = () => {
       const data = await response.json();
       console.log('Response data:', data);
       // Manejar el éxito del login aquí (por ejemplo, redirigir al usuario)
+      window.location.href = '/admin';
     } catch (error) {
       console.error('Error:', error);
       setError('Failed to login. Please check your credentials and try again.');
@@ -40,9 +41,9 @@ const Login = () => {
           <img
             alt="Red Panda School"
             src={logo}
-            className="mx-auto mt-6 h-28 w-auto"
+            className="mx-auto h-28 w-auto"
           />
-          <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-dark-900">
+          <h2 className="text-center font-bold py-8">
             Log in to your account
           </h2>
         </div>
@@ -50,7 +51,7 @@ const Login = () => {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+              <label htmlFor="email" className="block text-sm font-medium leading-6 text-[var(--color-black)]">
                 Email address
               </label>
               <div className="mt-2">
@@ -69,7 +70,7 @@ const Login = () => {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="password" className="block text-sm font-medium leading-6 text-[var(--color-black)]">
                   Password
                 </label>
                 <div className="text-sm">

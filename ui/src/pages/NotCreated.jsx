@@ -7,7 +7,7 @@ const NotCreated = () => {
         Pages not yet created or not necessary for the project
       </h2>
       <div className="mt-10 space-y-6 text-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-[var(--color-grey)]">
           This page is a placeholder for links that are not yet created.
         </p>
       </div>

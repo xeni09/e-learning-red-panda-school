@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import "./NavBar.css";
 import logo from "../assets/logo.svg";
 import userIcon from "../assets/user-icon.png";
+import { FaShoppingCart } from "react-icons/fa"; 
+import "./NavBar.css";
+
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -11,7 +13,7 @@ const navItems = [
   { name: "Contact", href: "/contact" },
 ];
 
-const NavBar = () => {
+const NavBar = ({ cartItemCount }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [navbarFixed, setNavbarFixed] = useState(false);
   const [navbarTransparent, setNavbarTransparent] = useState(false);
@@ -89,6 +91,15 @@ const NavBar = () => {
         </ul>
 
         <div className="navbar-login-container" ref={dropdownRef}>
+          <Link to="/checkout" className="relative text-white pr-4">
+            <FaShoppingCart className="text-white text-xl" />
+            {cartItemCount > 0 && (
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                {cartItemCount}
+              </span>
+            )}
+          </Link>
+
           <button className="navbar-login-icon" onClick={toggleDropdown}>
             <img src={userIcon} alt="User Icon" className="user-icon" />
           </button>

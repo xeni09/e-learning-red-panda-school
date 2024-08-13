@@ -1,8 +1,10 @@
 import React from 'react';
 import Section from "../components/Section";
-import heroBanner from "../assets/hero-banner.png";
+import heroBanner from "../assets/hero-banner2.png";
+import Feedback from "../components/Feedback";
+import CallToAction from "../components/CallToAction";
 import '../index.css';
-import './About.css'
+
 
 import alpaca from '../assets/images/alpaca.webp';
 import bear from '../assets/images/bear.jpeg';
@@ -82,40 +84,46 @@ const About = () => {
   return (
     <>
       <Section
-        color="#C1510E"
+        backgroundColor="orange"
+        titleColor="white"
+        textColor="white"
         image={heroBanner}
         title={"About Us"}
-        text="We provide the best courses!"
-        text2="Welcome to Red Panda School, where learning is as fun as a barrel of monkeys! Whether you're looking to master the art of coding, become a culinary wizard, or just want to learn how to juggle flaming torches (okay, maybe not that last one), we've got you covered. Join us and let's make learning an adventure!"
-        imagePosition={"right"}
-        imageSize={300}
+        text="Welcome to Red Panda School, where learning is as fun as a barrel of monkeys! Whether you're looking to master the art of coding, become a culinary wizard, or just want to learn how to juggle flaming torches (okay, maybe not that last one), we've got you covered. Join us and let's make learning an adventure!"
+        imagePosition={"left"}
+        imageSize={500}
+        showStatsSection={true}
       />
 
-      <div className="container">
+      <div className="container mx-auto">
         <div className='pt-10'>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Meet our Team</h2>
-          <p>
+          <h1 className=" font-bold text-center pb-10">Meet our Team</h1>
+          <h6 className='text-center px-6'> 
             Our team is composed of dedicated professionals who are passionate about education and committed to helping our students succeed. Each member brings a wealth of experience and expertise to the table, ensuring that our students receive the best possible learning experience.
-          </p>
+          </h6>
 
-          <ul role="list" className="py-10 grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-10 xl:col-span-2">
+          <ul role="list" className="py-20 grid gap-x-8 gap-y-12 md:grid-cols-2 sm:gap-y-10 xl:col-span-2">
             {people.map((person) => (
               <li key={person.name}>
                 <div className="flex items-start gap-x-6">
-                  <div className="image-container">
-                    <img alt="" src={person.image} className="person-image" />
+                  <div className="flex-shrink-0 w-44 h-44 overflow-hidden rounded-lg" style={{ aspectRatio: '1 / 1' }}>
+                    <img alt="" src={person.image} className="w-full h-full object-cover" />
                   </div>
-                  <div className="person-info">
-                    <h4 className="text-base font-semibold leading-7 tracking-tight">{person.name}</h4>
-                    <h4 className="text-sm font-semibold leading-6 text-primary">{person.role}</h4>
-                    <h5 className="text-sm">{person.description}</h5>
+                  <div className="max-w-xl">
+                    <h5 className="text-base font-semibold leading-7 tracking-tight">{person.name}</h5>
+                    <h6 className="text-sm font-semibold leading-6 text-primary">{person.role}</h6>
+                    <p className="text-sm text-left">{person.description}</p>
                   </div>
                 </div>
               </li>
             ))}
           </ul>
         </div>
+        
       </div>
+      <Feedback />
+      <CallToAction buttonText="All Courses"
+      buttonLink={"/courses"} />
     </>
   );
 };
