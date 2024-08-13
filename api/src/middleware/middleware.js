@@ -5,8 +5,8 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const express = require("express");
 const helmet = require("helmet");
-const { AppError } = require("@/config/config");
-const Logger = require("@/utils/Logger");
+const { AppError } = require("../config/config");
+const Logger = require("../utils/Logger");
 
 /**
  * Configura los middlewares de la aplicación.

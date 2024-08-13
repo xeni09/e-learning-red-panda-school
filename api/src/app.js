@@ -66,8 +66,35 @@ app.post("/login", async (req, res) => {
 });
 
 // Serve login form
-app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "login.html"));
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+
+  if (user && (await bcrypt.compare(password, user.password))) {
+    req.session.user = "admin";
+    req.session.userId = user._id;
+    res.redirect("/admin");
+  } else {
+    res.status(401).send("Invalid credentials");
+  }
+});
+
+app.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newUser = new User({
+    name,
+    email,
+    password: hashedPassword,
+  });
+
+  try {
+    await newUser.save();
+    res.status(201).send("User registered successfully");
+  } catch (error) {
+    res.status(500).send("Error registering user");
+  }
 });
 
 // Admin route
@@ -87,3 +114,7 @@ app.use("/api/auth", authRouter);
 initErrorHandler(app);
 
 module.exports = app;
+
+app.listen(3000, () => {
+  console.log("Server is running on http://localhost:3000");
+});
