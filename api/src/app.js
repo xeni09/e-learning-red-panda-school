@@ -16,8 +16,6 @@ const app = express();
 if (
   !process.env.SESSION_SECRET ||
   !process.env.JWT_SECRET ||
-  !process.env.ADMIN_EMAIL ||
-  !process.env.ADMIN_PASSWORD ||
   !process.env.MONGODB_URI
 ) {
   throw new Error("Faltan variables de entorno requeridas");

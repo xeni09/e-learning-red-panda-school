@@ -4,7 +4,10 @@ const app = require("./app");
 
 // Configurar puerto
 const port = process.env.PORT || 3000;
-app.set("port", port);
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
 // Crear servidor HTTP
 const server = http.createServer(app);
