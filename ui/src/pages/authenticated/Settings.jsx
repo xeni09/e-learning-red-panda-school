@@ -7,6 +7,7 @@ import useSettingsForm from '../../hooks/useSettingsForm';
 
 const Settings = () => {
   const { user, updateUser } = useContext(AuthContext);
+ 
   const {
     isEditing, setIsEditing, editedName, setEditedName,
     editedEmail, setEditedEmail, editedPassword, setEditedPassword,

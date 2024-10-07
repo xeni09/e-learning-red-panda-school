@@ -4,6 +4,8 @@ import AdminSubMenu from '../../components/adminComponents/AdminSubMenu';
 import CustomDropdown from '../../components/adminComponents/CustomDropdown';
 import SearchBar from '../../components/adminComponents/SearchBar';
 import UserTable from '../../components/adminComponents/UserTable';
+import { useAuth } from '../../context/AuthProvider';  
+
 
 import CreateUserForm from '../../components/adminComponents/CreateUserForm';
 
@@ -11,6 +13,7 @@ const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [editingUserId, setEditingUserId] = useState(null);
   const [editFormData, setEditFormData] = useState({ name: '', email: '', role: 'user', password: '' });
+  const { user, updateUserState } = useAuth(); 
 
   const [error, setError] = useState(null);
   const [filterRole, setFilterRole] = useState('');
@@ -28,16 +31,16 @@ const ManageUsers = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get('/api/users');
-      
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
         setError('Failed to load users.');
       }
     };
-
+  
     fetchUsers();
-  }, []);
+  }, []); 
+  
 
   const handleCreateUser = async (newUserData) => {
     try {
@@ -61,26 +64,39 @@ const ManageUsers = () => {
       password: ''  // Password field will be left empty as it won't be fetched from the database
     });
   
-  console.log("hello");
   };
   
 
   const handleSaveChanges = async (userId) => {
     try {
-      // Only send the password if it's been updated (not empty)
       const updatedData = { ...editFormData };
+      
+      // Si la contraseña no ha sido modificada, no la enviamos
       if (!editFormData.password) {
-        delete updatedData.password; // Don't send empty password if not updated
+        delete updatedData.password;
       }
-  
+
+      // Realizar la petición al backend para actualizar el usuario
       await axios.put(`/api/users/user/${userId}`, updatedData);
-      setUsers(users.map(user => (user._id === userId ? { ...user, ...updatedData } : user)));
+
+      // Actualizar la lista de usuarios en el estado local
+      setUsers(users.map(user => user._id === userId ? { ...user, ...updatedData } : user));
+
+      // Si el usuario autenticado es el que se editó, actualizamos el estado global
+      if (user && user._id === userId) {
+        updateUserState(updatedData);  // Actualiza el contexto con los nuevos datos
+      }
+
+      // Limpiar el formulario y el estado de edición
       setEditingUserId(null);
     } catch (error) {
       console.error('Error updating user:', error);
       setError('Failed to update user.');
     }
   };
+  
+  
+  
   
 
   const handleCancelEdit = () => {

@@ -28,8 +28,6 @@ const AuthProvider = ({ children }) => {
     verifyUserToken();
   }, []);
   
-  
-
   const handleInvalidToken = () => {
     setIsAuthenticated(false);
     setUser(null);
@@ -50,24 +48,15 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // const updateUser = async () => {
-  //   try {
-  //     const response = await axios.get('/api/auth/verifyToken');
-  //     if (response.data && response.data.user) {
-  //       setUser(response.data.user);
-  //       return response.data.user;
-  //     } else {
-  //       handleInvalidToken();  // If no user, clear session
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to update user data:', error);
-  //     handleInvalidToken();  // Treat failed verification as invalid token
-  //   }
-  // };
+  // Función para actualizar el usuario sin volver a hacer una petición
+  const updateUserState = (updatedUserData) => {
+    setUser(updatedUserData);  // Actualiza el estado local del usuario
+  };
 
+  // Función para solicitar al backend los datos más recientes del usuario
   const updateUser = async () => {
     try {
-      const response = await axios.get('/api/auth/verifyToken');
+      const response = await axios.get('/api/auth/verifyToken', { withCredentials: true });
       if (response.data && response.data.user) {
         setUser(response.data.user);  // Actualiza el estado global de user
         return response.data.user;  // Asegura que devuelve el usuario actualizado
@@ -79,11 +68,9 @@ const AuthProvider = ({ children }) => {
       handleInvalidToken();
     }
   };
-  
-
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, isLoading, login, logout, updateUser, updateUserState }}>
       {children}
     </AuthContext.Provider>
   );
