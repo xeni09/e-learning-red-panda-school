@@ -131,7 +131,7 @@ const CreateUserForm = ({ onCreateUser }) => {
     options={roleOptions}
     selectedOption={formData.role}
     onOptionSelect={handleRoleChange}
-    className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-[var(--color-yellow)]"
+    className="w-full  border-gray-300rounded focus:outline-none focus:border-[var(--color-yellow)]"
   />
   {formErrors.role && <p className="text-red-500 text-sm">{formErrors.role}</p>}
 </div>

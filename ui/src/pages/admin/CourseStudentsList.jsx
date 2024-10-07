@@ -116,7 +116,9 @@ const handleAddUserToCourse = async () => {
 
         {students.length > 0 ? (
           <div className="bg-white p-10 rounded-lg">
-            <h2 className="text-3xl font-normal">Students Registered for the Course:</h2>
+            <p className="text-3xl pb-5">Students Registered for the Course:</p>
+           
+           
             <Link to={`/admin/manage-courses/${courseId}`}>
               <h2 className="flex justify-start items-end text-3xl font-bold text-[var(--color-orange)] cursor-pointer">
                 "{courseName}"
@@ -124,7 +126,7 @@ const handleAddUserToCourse = async () => {
               </h2>
             </Link>
 
-            <table className="table-auto w-full mb-6 rounded-lg">
+            <table className="table-auto w-full mb-6 rounded-lg ">
               <thead>
                 <tr>
                   <th className="px-4 py-2">Name</th>
@@ -152,14 +154,14 @@ const handleAddUserToCourse = async () => {
           </div>
         ) : (
           <div className="bg-white p-10">
-            <h2 className="text-3xl font-normal">Students Registered for:</h2>
+            <p className="text-3xl font-normal pb-4">Students Registered for the Course:</p>
             <Link to={`/admin/manage-courses/${courseId}`}>
               <h2 className="flex justify-start text-3xl font-bold text-[var(--color-orange)] cursor-pointer">
                 "{courseName}"
                 <span className="pl-4 text-xs pt-6">Click here to go back to this Course Info</span>
               </h2>
             </Link>
-            <p className="pt-10 font-bold text-xl">
+            <p className="pt-10 text-xl">
               Sorry, but no students have registered for this course yet..
             </p>
           </div>
