@@ -3,8 +3,6 @@ import CustomDropdown from '../../components/adminComponents/CustomDropdown';
 import { categories } from '../sharedComponents/constants';
 import { Link } from 'react-router-dom';
 
-
-
 const CourseRow = ({
   course,
   editingCourseId,
@@ -19,7 +17,6 @@ const CourseRow = ({
 }) => {
   return (
     <tr key={course._id}>
-
       <td className="border px-4 py-2 text-center">
         <Link to={`/admin/manage-courses/${course._id}`} className="text-[var(--color-orange)]">
           {course.customId}
@@ -88,10 +85,9 @@ const CourseRow = ({
 
       <td className="border px-4 py-2 text-center">
         <Link to={`/admin/manage-courses/${course._id}/students`} className="text-[var(--color-orange)]">
-        {course.students ? course.students.length : 0} 
+          {course.students ? course.students.length : 0} 
         </Link>
       </td>
-
 
       <td className="border px-0 py-0 text-center">
         <img
@@ -106,13 +102,13 @@ const CourseRow = ({
           <div className="flex flex-col lg:flex-row justify-center space-x-1">
             <button
               onClick={() => handleSaveChanges(course._id)}
-              className="btn-save "
+              className="btn-save"
             >
               Save
             </button>
             <button
               onClick={handleCancelEdit}
-              className="btn-cancel bg-gray-400 "
+              className="btn-cancel bg-gray-400"
             >
               Cancel
             </button>

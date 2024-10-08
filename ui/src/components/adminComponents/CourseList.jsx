@@ -1,7 +1,7 @@
 import React from 'react';
 
-import CreateCourseForm from '../../components/courseComponents/CreateCourseForm';
-import CourseTable from './CourseTable'; 
+import CreateCourseForm from '../courseComponents/CreateCourseForm';
+import CourseTable from '../courseComponents/CourseTable'; 
 
 const CourseList = ({
   courses,

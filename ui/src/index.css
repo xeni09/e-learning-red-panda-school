@@ -18,7 +18,7 @@
   --color-light-yellow: #ebba09;
   --color-black: #303030;
   --color-grey: #80858f;
-  --color-white: #fff9f4;
+  --color-white: #f7f7f7;
   --color-beige: #efede7;
   --color-green: #7ab00c;
   --color-red: #c71515;
@@ -91,7 +91,11 @@ h2 {
   line-height: 1 !important;
   padding-bottom: 20px;
 }
-
+@media (max-width: 640px) {
+  h2 {
+    font-size: 2rem !important; /* Reduce el tamaño en pantallas pequeñas */
+  }
+}
 h3 {
   font-size: 1.25rem !important;
   font-weight: 800 !important;

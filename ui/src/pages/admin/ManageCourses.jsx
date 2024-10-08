@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../services/axiosConfig';
 import AdminSubMenu from '../../components/adminComponents/AdminSubMenu';
-import CourseList from '../../components/courseComponents/CourseList';
+import CourseList from '../../components/adminComponents/CourseList';
 
 const ManageCourses = () => {
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [showForm, setShowForm] = useState(false);
   const [showCreateCourseForm, setShowCreateCourseForm] = useState(false);
   const [editingCourseId, setEditingCourseId] = useState(null);
   const [editFormData, setEditFormData] = useState({
@@ -16,6 +15,7 @@ const ManageCourses = () => {
     description: '',
     price: '',
   });
+
   const toggleForm = () => {
     setShowCreateCourseForm(prevState => !prevState);  
   };
@@ -33,63 +33,33 @@ const ManageCourses = () => {
     fetchCourses();
   }, []);
 
-  const handleCreateCourse = async (formData) => { // Recibimos formData directamente
+  const handleCreateCourse = async (formData) => {
     try {
-      console.log([...formData.entries()]); // Verifica el contenido de FormData antes de enviarlo
-  
       if (selectedCourse) {
-        // Si estamos editando un curso
-        const response = await axios.put(`/api/courses/${selectedCourse._id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const response = await axios.put(`/api/courses/${selectedCourse._id}`, formData);
         setCourses(courses.map(course => 
-          course._id === selectedCourse._id ? { ...course, ...courseData } : course));
+          course._id === selectedCourse._id ? { ...course, ...formData } : course));
         setSelectedCourse(null);
       } else {
-        // Crear nuevo curso
-        const response = await axios.post('/api/courses', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        const response = await axios.post('/api/courses', formData);
         setCourses([...courses, response.data]);
       }
-  
-      toggleForm();  // Ocultar el formulario después de crear/editar el curso
+      toggleForm();
     } catch (error) {
-      if (error.response) {
-        console.error('Error en la respuesta del servidor:', error.response.data);
-      } else if (error.request) {
-        console.error('No se recibió respuesta del servidor:', error.request);
-      } else {
-        console.error('Error en la solicitud:', error.message);
+      console.error('Error creating or updating course:', error);
+    }
+  };
+
+  const handleDeleteCourse = async (courseId) => {
+    if (window.confirm('Are you sure you want to delete this course?')) {
+      try {
+        await axios.delete(`/api/courses/${courseId}`);
+        setCourses(courses.filter(course => course._id !== courseId));
+      } catch (error) {
+        console.error('Error deleting course:', error);
       }
     }
   };
-  
-  
-
-  const handleDeleteCourse = async (courseId) => {
-    const confirmed = window.confirm('Are you sure you want to delete this course?');
-    if (!confirmed) return;
-  
-    const shouldDeleteImage = true;
-  
-    try {
-      await axios({
-        method: 'delete',
-        url: `/api/courses/${courseId}`,
-        data: { deleteImage: shouldDeleteImage },
-      });
-      setCourses(courses.filter(course => course._id !== courseId));
-    } catch (error) {
-      console.error('Error deleting course:', error);
-    }
-  };
-  
-  
 
   const handleEditCourse = (course) => {
     setEditingCourseId(course._id);
@@ -102,39 +72,21 @@ const ManageCourses = () => {
     });
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-  
-    // Actualiza el campo correspondiente en `editFormData`
-    setEditFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-
   const handleSaveChanges = async (courseId) => {
     try {
       const updatedCourse = { ...editFormData };
-      console.log("Saving course with ID:", courseId); // <-- Log para verificar el courseId
       await axios.put(`/api/courses/${courseId}`, updatedCourse);
       setCourses(courses.map(course =>
         course._id === courseId ? { ...course, ...updatedCourse } : course
       ));
-      setEditingCourseId(null); // Limpiar la edición después de guardar
+      setEditingCourseId(null);
     } catch (error) {
       console.error('Error updating course:', error);
     }
   };
-  
 
   const handleCancelEdit = () => {
     setEditingCourseId(null);
-  };
-
-  const handleCancel = () => {
-    setShowForm(false);
-    setSelectedCourse(null);
   };
 
   return (
@@ -142,7 +94,6 @@ const ManageCourses = () => {
       <AdminSubMenu />
       <div className="container mx-auto p-4 pt-20">
         <h2>Manage Courses</h2>
-
         <CourseList
           courses={courses}
           onDeleteCourse={handleDeleteCourse}
@@ -151,13 +102,12 @@ const ManageCourses = () => {
           showCreateCourseForm={showCreateCourseForm}
           handleCreateCourse={handleCreateCourse}
           selectedCourse={selectedCourse}
-          handleCancel={handleCancel}
-          editingCourseId={editingCourseId} // Paso el ID del curso en edición
+          editingCourseId={editingCourseId}
           editFormData={editFormData}
           setEditFormData={setEditFormData}
-          handleSaveChanges={handleSaveChanges} // Función para guardar cambios
-          handleCancelEdit={handleCancelEdit} // Función para cancelar la edición
-          handleInputChange={handleInputChange}
+          handleSaveChanges={handleSaveChanges}
+          handleCancelEdit={handleCancelEdit}
+          handleInputChange={(e) => setEditFormData({ ...editFormData, [e.target.name]: e.target.value })}
         />
       </div>
     </>

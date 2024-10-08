@@ -115,45 +115,69 @@ const handleAddUserToCourse = async () => {
         </div>
 
         {students.length > 0 ? (
-          <div className="bg-white p-10 rounded-lg">
-            <p className="text-3xl pb-5">Students Registered for the Course:</p>
-           
-           
-            <Link to={`/admin/manage-courses/${courseId}`}>
-              <h2 className="flex justify-start items-end text-3xl font-bold text-[var(--color-orange)] cursor-pointer">
-                "{courseName}"
-                <span className="pl-4 text-sm ">*Click here to go back</span>
-              </h2>
-            </Link>
+  <div className="bg-white p-10 rounded-lg">
 
-            <table className="table-auto w-full mb-6 rounded-lg ">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">Email</th>
-                  <th className="px-4 py-2">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((student) => (
-                  <tr key={student._id}>
-                    <td className="border px-4 py-2 text-center">{student.name}</td>
-                    <td className="border px-4 py-2 text-center">{student.email}</td>
-                    <td className="border px-4 py-2 text-center">
-                      <button
-                        onClick={() => handleRemoveStudent(student._id)}
-                        className="btn-delete text-white bg-red-500 hover:bg-red-700 px-4 py-2 rounded"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
+    {/* Título del curso y enlace */}
+    <div>
+      <p className="sm:text-3xl text-xl pb-5">Students Registered for the Course:</p>
+      <Link to={`/admin/manage-courses/${courseId}`}>
+        <h2 className="font-bold text-[var(--color-orange)] cursor-pointer">
+          "{courseName}"
+        </h2>
+        <p className="pl-4 text-sm text-[var(--color-orange)] ">*Click here to go back</p>
+      </Link>
+    </div>
+
+    {/* Tabla - VISIBLE SOLO EN ESCRITORIO/DESKTOP */}
+    <div className="md:block xs:hidden "> 
+      <table className="table-auto w-full mb-2 rounded-lg">
+        <thead>
+          <tr>
+            <th className="px-4 py-2">Name</th>
+            <th className="px-4 py-2">Email</th>
+            <th className="px-4 py-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((student) => (
+            <tr key={student._id}>
+              <td className="border text-center">{student.name}</td>
+              <td className="border text-center">{student.email}</td>
+              <td className="border text-center">
+                <button
+                  onClick={() => handleRemoveStudent(student._id)}
+                  className="btn-delete text-white bg-red-500 hover:bg-red-700 rounded"
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    {/* Cards - VISIBLE SOLO EN MÓVIL/MOBILE */}
+    <div className=" sm:grid md:hidden grid-cols-1 gap-4 my-6">
+      {students.map((student) => (
+        <div key={student._id} className="bg-gray-100 p-4 rounded-lg shadow-md my-6">
+          <p className="text-md text-left"><strong>Name:</strong> {student.name}</p>
+          <p className="text-md text-left" ><strong>Email:</strong> {student.email}</p>
+          <button
+            onClick={() => handleRemoveStudent(student._id)}
+            className="btn-delete text-white bg-red-500 hover:bg-red-700 px-4 py-2 mt-4 rounded "
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+    </div>
+
+  </div>
+) : (
           <div className="bg-white p-10">
+
+            <div className="flex justify-between items-center mb-6">
             <p className="text-3xl font-normal pb-4">Students Registered for the Course:</p>
             <Link to={`/admin/manage-courses/${courseId}`}>
               <h2 className="flex justify-start text-3xl font-bold text-[var(--color-orange)] cursor-pointer">
@@ -161,11 +185,16 @@ const handleAddUserToCourse = async () => {
                 <span className="pl-4 text-xs pt-6">Click here to go back to this Course Info</span>
               </h2>
             </Link>
+      </div>
+
             <p className="pt-10 text-xl">
               Sorry, but no students have registered for this course yet..
             </p>
           </div>
         )}
+
+
+
       </div>
     </>
   );
