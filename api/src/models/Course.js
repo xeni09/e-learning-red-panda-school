@@ -13,7 +13,7 @@ const SectionSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  thumbnail: {
+  sectionImage: {
     type: String,
     required: false,
   },

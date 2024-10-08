@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import AuthContext from './AuthContext';
 import axios from '../services/axiosConfig'; 
 
@@ -7,7 +8,11 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const location = useLocation(); // Get current route
+
   useEffect(() => {
+    const protectedRoutes = ['/dashboard', '/my-account', '/admin']; // Define your protected routes
+
     const verifyUserToken = async () => {
       try {
         const response = await axios.get('/api/auth/verifyToken', { withCredentials: true });
@@ -24,10 +29,15 @@ const AuthProvider = ({ children }) => {
         setIsLoading(false);
       }
     };
-  
-    verifyUserToken();
-  }, []);
-  
+
+    // Only verify token if the user is on a protected route
+    if (protectedRoutes.includes(location.pathname)) {
+      verifyUserToken();
+    } else {
+      setIsLoading(false); // For public routes, stop loading immediately
+    }
+  }, [location.pathname]);
+
   const handleInvalidToken = () => {
     setIsAuthenticated(false);
     setUser(null);

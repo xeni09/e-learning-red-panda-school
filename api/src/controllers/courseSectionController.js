@@ -27,7 +27,7 @@ const addCourseSection = async (req, res) => {
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found" });
 
-    let thumbnail = null;
+    let sectionImage = null;
     if (req.file) {
       const resizedImagePath = `/uploads/resized_${req.file.filename}`;
       await sharp(req.file.path)
@@ -40,10 +40,10 @@ const addCourseSection = async (req, res) => {
           )
         );
       fs.unlinkSync(req.file.path);
-      thumbnail = resizedImagePath;
+      sectionImage = resizedImagePath;
     }
 
-    const newSection = { title, description, videoUrl, thumbnail };
+    const newSection = { title, description, videoUrl, sectionImage };
     course.sections.push(newSection);
     await course.save();
     const createdSection = course.sections[course.sections.length - 1];
@@ -71,7 +71,7 @@ const updateCourseSection = async (req, res) => {
     section.description = description || section.description;
     section.videoUrl = videoUrl || section.videoUrl;
 
-    // Si hay un archivo de imagen, actualiza el thumbnail
+    // Si hay un archivo de imagen, actualiza el sectionImage
     if (req.file) {
       const resizedImagePath = `/uploads/resized_${req.file.filename}`;
       await sharp(req.file.path)
@@ -84,7 +84,7 @@ const updateCourseSection = async (req, res) => {
           )
         );
       fs.unlinkSync(req.file.path);
-      section.thumbnail = resizedImagePath;
+      section.sectionImage = resizedImagePath;
     }
 
     await course.save();

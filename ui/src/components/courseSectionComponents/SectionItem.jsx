@@ -19,19 +19,25 @@ const SectionItem = ({ section, onEditClick, onDeleteClick, onSaveClick }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedSection, setEditedSection] = useState(section);
   const [croppingImage, setCroppingImage] = useState(null); 
-  const [croppedImage, setCroppedImage] = useState(section.thumbnail || null); 
+  const [croppedImage, setCroppedImage] = useState(section.sectionImage || null); 
   const [temporaryImage, setTemporaryImage] = useState(null);
 
   // Obtener el ID de YouTube, si existe
   const videoId = getYouTubeVideoId(section.videoUrl); 
 
-  const thumbnailUrl = croppedImage
+
+  const baseUrl = window.location.origin || "http://localhost:3000";
+
+
+
+  const sectionImageUrl = croppedImage
   ? croppedImage
   : videoId
   ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-  : section.thumbnail
-  ? `${baseUrl}/uploads/sections${section.thumbnail}`  // Incluye el prefijo correcto
-  : 'https://via.placeholder.com/150?text=No+Thumbnail';
+  : section.sectionImage
+  ? `${baseUrl}/uploads/sections${section.sectionImage}`
+  : 'https://via.placeholder.com/150?text=No+sectionImage';
+
 
   const handleWatchVideoClick = () => {
     setShowVideoModal(true);
@@ -52,10 +58,10 @@ const SectionItem = ({ section, onEditClick, onDeleteClick, onSaveClick }) => {
   const handleSaveClick = () => {
     const updatedSection = {
       ...editedSection,
-      thumbnail: temporaryImage || croppedImage || section.thumbnail,
+      sectionImage: temporaryImage || croppedImage || section.sectionImage,
     };
   
-    console.log("Updated section before saving:", updatedSection); // <-- Verifica los datos de la sección, especialmente el thumbnail
+    console.log("Updated section before saving:", updatedSection); // <-- Verifica los datos de la sección, especialmente el sectionImage
     onSaveClick(updatedSection);
     setIsEditing(false);
   };
@@ -65,7 +71,7 @@ const SectionItem = ({ section, onEditClick, onDeleteClick, onSaveClick }) => {
   const handleCancelClick = () => {
     setIsEditing(false);
     setEditedSection(section);
-    setCroppedImage(section.thumbnail); 
+    setCroppedImage(section.sectionImage); 
   };
 
   // Manejar la carga de archivos
@@ -93,8 +99,8 @@ const SectionItem = ({ section, onEditClick, onDeleteClick, onSaveClick }) => {
       <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
         {section.videoUrl || croppedImage ? (
           <img
-            src={thumbnailUrl}
-            alt="Video Thumbnail"
+            src={sectionImageUrl}
+            alt="Video sectionImage"
             className="w-full md:w-32 h-auto md:h-24 object-cover rounded-md cursor-pointer"
             onClick={() => setIsEditing(true)}
           />

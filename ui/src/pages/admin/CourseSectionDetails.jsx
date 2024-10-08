@@ -39,6 +39,49 @@ const CourseSectionDetails = () => {
     return <p>Loading section details...</p>;
   }
 
+  const handleEditSection = async (updatedSection, index) => {
+    try {
+      const formData = new FormData();
+      formData.append("title", updatedSection.title);
+      formData.append("description", updatedSection.description);
+      formData.append("videoUrl", updatedSection.videoUrl);
+  
+      if (updatedSection.sectionImage instanceof File) {
+        formData.append("sectionImage", updatedSection.sectionImage);
+      }
+  
+      const response = await axios.put(
+        `/api/courses/${courseId}/sections/${updatedSection._id}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+  
+      // Actualizar el estado de las secciones
+      const newSections = sections.map((section, i) => 
+        i === index ? response.data : section
+      );
+      setSections(newSections);
+  
+    } catch (error) {
+      console.error('Error updating section:', error);
+    }
+  };
+  const handleDeleteSection = async (index) => {
+    try {
+      const updatedSections = sections.filter((_, i) => i !== index);
+      await axios.put(`/api/courses/${courseId}`, { sections: updatedSections });
+
+      setSections(updatedSections);
+    } catch (error) {
+      console.error('Error deleting section:', error);
+    }
+  };
+
+
   return (
     <>
       <AdminSubMenu />
@@ -62,9 +105,10 @@ const CourseSectionDetails = () => {
             {/* Lista de las otras secciones */}
             {sections.length > 0 && (
               <CourseSectionsList 
-                sections={sections}
-                // Puedes pasar las funciones para editar o eliminar secciones aquí
-              />
+              sections={sections}
+              onEditSection={handleEditSection} 
+              onDeleteSection={handleDeleteSection} 
+            />
             )}
           </div>
         </div>

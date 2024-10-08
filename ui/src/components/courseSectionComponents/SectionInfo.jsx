@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import CustomDropdown from '../adminComponents/CustomDropdown';
 import axios from '../../services/axiosConfig';
-import SectionImageUploadAndCrop from './SectionImageUploadAndCrop'; 
-import { categories } from '../sharedComponents/constants'; // Si tienes categorías para secciones
+import SectionImageUploadAndCrop from './SectionImageUploadAndCrop';
+import VideoModal from '../sharedComponents/VideoModal'; // Asegúrate de importar el modal
 
 const SectionInfo = ({ courseId, sectionId }) => {
   const [sectionData, setSectionData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingImage, setIsChangingImage] = useState(false);
   const [temporaryImage, setTemporaryImage] = useState(null);
+  const [showVideoModal, setShowVideoModal] = useState(false); // Estado para el modal
+  const [currentVideoUrl, setCurrentVideoUrl] = useState('');  // URL del video actual
 
   useEffect(() => {
     const fetchSectionDetails = async () => {
@@ -36,31 +37,40 @@ const SectionInfo = ({ courseId, sectionId }) => {
       formData.append("title", sectionData.title);
       formData.append("description", sectionData.description);
       formData.append("videoUrl", sectionData.videoUrl);
-  
-      // Si una nueva imagen fue subida, añádela al FormData
+
       if (temporaryImage) {
         formData.append("sectionImage", temporaryImage, 'croppedImage.jpeg');
       }
-  
-      // Envía la solicitud para actualizar la sección, si hay una imagen la subimos con el nuevo endpoint
+
       const response = await axios.put(`/api/courses/${courseId}/sections/${sectionId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      
-      setSectionData(response.data); // Actualizamos con los nuevos datos de la sección
+
+      setSectionData(response.data);
       setIsEditing(false);
       setIsChangingImage(false);
     } catch (error) {
       console.error('Error saving section details:', error);
     }
   };
-  
 
   const handleCancelEdit = () => {
     setIsEditing(false);
     setIsChangingImage(false);
+  };
+
+  // Abre el modal y establece la URL del video
+  const handleOpenVideoModal = (videoUrl) => {
+    setCurrentVideoUrl(videoUrl);
+    setShowVideoModal(true);
+  };
+
+  // Cierra el modal
+  const handleCloseVideoModal = () => {
+    setShowVideoModal(false);
+    setCurrentVideoUrl('');
   };
 
   if (!sectionData) {
@@ -94,7 +104,7 @@ const SectionInfo = ({ courseId, sectionId }) => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow-md rounded-lg p-6 mb-6">
+      <div className="flex flex-col space-y-6 bg-white shadow-md rounded-lg p-6 mb-6">
         <div>
           <label className="block mb-2 font-medium text-gray-700">Section Title</label>
           {isEditing ? (
@@ -117,7 +127,7 @@ const SectionInfo = ({ courseId, sectionId }) => {
               name="description"
               value={sectionData.description}
               onChange={handleInputChange}
-              className="border border-gray-300 px-4 py-2 w-full rounded-md focus:outline-none focus:ring focus:ring-blue-300 whitespace-pre-wrap"
+              className="border border-gray-300 px-4 py-2 w-full rounded-md focus:outline-none focus:ring whitespace-pre-wrap"
             />
           ) : (
             <p className="border px-4 py-2 w-full rounded-md bg-gray-100" style={{ whiteSpace: 'pre-line' }}>
@@ -127,23 +137,20 @@ const SectionInfo = ({ courseId, sectionId }) => {
         </div>
 
         <div>
-          <label className="block mb-2 font-medium text-gray-700">Video URL</label>
-          {isEditing ? (
-            <input
-              type="text"
-              name="videoUrl"
-              value={sectionData.videoUrl}
-              onChange={handleInputChange}
-              className="border border-gray-300 px-4 py-2 w-full rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-            />
-          ) : (
-            <a href={sectionData.videoUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--color-orange)] hover:underline">
+          <label className="block mb-2 font-medium text-gray-700">Video</label>
+          {sectionData.videoUrl ? (
+            <button
+              onClick={() => handleOpenVideoModal(sectionData.videoUrl)} // Abrir el modal con el video
+              className="text-[var(--color-orange)] hover:underline"
+            >
               Watch Video
-            </a>
+            </button>
+          ) : (
+            <p className="text-gray-500">No video available</p>
           )}
         </div>
 
-        <div className="flex justify-start space-x-4">
+        <div className="justify-start">
           {isEditing ? (
             <>
               <button onClick={handleSaveChanges} className="btn-save">Save Changes</button>
@@ -154,6 +161,11 @@ const SectionInfo = ({ courseId, sectionId }) => {
           )}
         </div>
       </div>
+
+      {/* Modal para mostrar el video */}
+      {showVideoModal && (
+        <VideoModal videoUrl={currentVideoUrl} onClose={handleCloseVideoModal} />
+      )}
     </div>
   );
 };

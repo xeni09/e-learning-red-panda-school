@@ -64,8 +64,8 @@ const CourseDetails = () => {
       formData.append("description", updatedSection.description);
       formData.append("videoUrl", updatedSection.videoUrl);
   
-      if (updatedSection.thumbnail instanceof File) {
-        formData.append("thumbnail", updatedSection.thumbnail);
+      if (updatedSection.sectionImage instanceof File) {
+        formData.append("sectionImage", updatedSection.sectionImage);
       }
   
       const response = await axios.put(

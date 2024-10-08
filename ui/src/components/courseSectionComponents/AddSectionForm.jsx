@@ -6,7 +6,7 @@ const AddSectionForm = ({ handleAddSection, sectionToEdit }) => {
     title: '',
     description: '',
     videoUrl: '',
-    thumbnail: null,
+    sectionImage: null,
   });
 
   const [errors, setErrors] = useState({});
@@ -20,7 +20,7 @@ const AddSectionForm = ({ handleAddSection, sectionToEdit }) => {
         title: sectionToEdit.title || '',
         description: sectionToEdit.description || '',
         videoUrl: sectionToEdit.videoUrl || '',
-        thumbnail: sectionToEdit.thumbnail || null,
+        sectionImage: sectionToEdit.sectionImage || null,
       });
     }
   }, [sectionToEdit]);
@@ -69,7 +69,7 @@ const AddSectionForm = ({ handleAddSection, sectionToEdit }) => {
 
     if (croppedImage) {
       const blob = dataURLtoBlob(croppedImage);
-      formData.append("thumbnail", blob, 'thumbnail.jpeg');
+      formData.append("sectionImage", blob, 'sectionImage.jpeg');
     }
 
     handleAddSection(formData);
@@ -131,7 +131,7 @@ const AddSectionForm = ({ handleAddSection, sectionToEdit }) => {
         croppingImage={croppingImage}
         croppedImage={croppedImage}
         errors={errors}
-        setTemporaryImage={(file) => setNewSection({ ...newSection, thumbnail: file })} 
+        setTemporaryImage={(file) => setNewSection({ ...newSection, sectionImage: file })} 
 
       />
 

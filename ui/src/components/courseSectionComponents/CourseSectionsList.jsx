@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import VideoModal from '../sharedComponents/VideoModal';
 import SectionItem from './SectionItem';
-import axios from '../../services/axiosConfig';
+import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 
@@ -12,16 +12,16 @@ const CourseSectionsList = ({ sections, onEditSection, onDeleteSection }) => {
   const [currentVideoUrl, setCurrentVideoUrl] = useState('');
 
   const handleSaveClick = async (updatedSection, index) => {
-    console.log("Saving section with thumbnail:", updatedSection.thumbnail); // <-- Verifica el thumbnail
+    console.log("Saving section with sectionImage:", updatedSection.sectionImage); // <-- Verifica el sectionImage
     const formData = new FormData();
   
     formData.append('title', updatedSection.title);
     formData.append('description', updatedSection.description);
     formData.append('videoUrl', updatedSection.videoUrl);
   
-    if (updatedSection.thumbnail instanceof File) {
-      formData.append('thumbnail', updatedSection.thumbnail);
-      console.log("Appending thumbnail to FormData:", updatedSection.thumbnail); // <-- Verifica si el thumbnail se está añadiendo
+    if (updatedSection.sectionImage instanceof File) {
+      formData.append('sectionImage', updatedSection.sectionImage);
+      console.log("Appending sectionImage to FormData:", updatedSection.sectionImage); // <-- Verifica si el sectionImage se está añadiendo
 
     }
   
