@@ -19,6 +19,7 @@ const getCourseSections = async (req, res) => {
 };
 
 // Agregar una nueva sección
+
 const addCourseSection = async (req, res) => {
   const { courseId } = req.params;
   const { title, description, videoUrl } = req.body;
@@ -27,25 +28,29 @@ const addCourseSection = async (req, res) => {
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found" });
 
-    let sectionImage = null;
+    let imageUrl = null;
     if (req.file) {
-      const resizedImagePath = `/uploads/resized_${req.file.filename}`;
+      const resizedImageFilename = `resized_${req.file.filename}`;
+      const resizedImagePath = `/uploads/sections/${resizedImageFilename}`;
+
       await sharp(req.file.path)
         .resize(300, 200)
         .toFile(
           path.join(
             __dirname,
-            "../../public/uploads",
-            `resized_${req.file.filename}`
+            "../../public/uploads/sections",
+            resizedImageFilename
           )
         );
+
       fs.unlinkSync(req.file.path);
-      sectionImage = resizedImagePath;
+      imageUrl = resizedImagePath; // Usa imageUrl en lugar de sectionImagePath
     }
 
-    const newSection = { title, description, videoUrl, sectionImage };
+    const newSection = { title, description, videoUrl, sectionImage: imageUrl };
     course.sections.push(newSection);
     await course.save();
+
     const createdSection = course.sections[course.sections.length - 1];
     res.status(201).json(createdSection);
   } catch (error) {
@@ -71,20 +76,23 @@ const updateCourseSection = async (req, res) => {
     section.description = description || section.description;
     section.videoUrl = videoUrl || section.videoUrl;
 
-    // Si hay un archivo de imagen, actualiza el sectionImage
+    // Si hay un archivo de imagen, actualiza el imageUrl
     if (req.file) {
-      const resizedImagePath = `/uploads/resized_${req.file.filename}`;
+      const resizedImageFilename = `resized_${req.file.filename}`;
+      const imageUrl = `/uploads/sections/${resizedImageFilename}`;
+
       await sharp(req.file.path)
         .resize(300, 200)
         .toFile(
           path.join(
             __dirname,
-            "../../public/uploads",
-            `resized_${req.file.filename}`
+            "../../public/uploads/sections",
+            resizedImageFilename
           )
         );
+
       fs.unlinkSync(req.file.path);
-      section.sectionImage = resizedImagePath;
+      section.sectionImage = imageUrl; // Usa imageUrl
     }
 
     await course.save();

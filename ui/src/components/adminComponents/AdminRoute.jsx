@@ -6,7 +6,7 @@ const AdminRoute = ({ children }) => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <p></p>;
   }
 
   // Check if the user has the admin role

@@ -95,17 +95,20 @@ const login = async (req, res) => {
 // Controlador para verificar el token JWT
 const verifyToken = async (req, res) => {
   try {
-    const token = req.cookies.token; // Obtener el token de las cookies
+    // Obtener el token de las cookies o de los encabezados de autorización
+    const token = req.cookies.token;
 
     if (!token) {
-      return res.status(401).json({ error: "No token provided" });
+      return res.status(200).json({ user: null });
     }
 
+    // Verificar y decodificar el token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Buscar el usuario en la base de datos y popular los cursos
     const user = await User.findById(decoded._id).populate({
       path: "courses",
-      model: "Course", // Asegurarnos de popular los cursos
+      model: "Course",
       select: "_id name description teacher imageSrc",
     });
 
@@ -113,6 +116,7 @@ const verifyToken = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Devolver la información del usuario
     return res.json({ user });
   } catch (err) {
     console.error("Token verification failed:", err.message);

@@ -2,24 +2,20 @@ import axios from "axios";
 
 const baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
-// Create an instance of Axios
+// Crear una instancia de Axios
 const axiosInstance = axios.create({
   baseURL,
   withCredentials: true,
 });
 
-// Interceptor for handling authentication errors
+// Interceptor para manejar errores de autenticación
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      console.error("Unauthorized, redirecting to login...");
-      const protectedRoutes = ["/dashboard", "/my-account", "/admin"];
-
-      // Only redirect if you're on a protected route
-      if (protectedRoutes.includes(window.location.pathname)) {
-        window.location.href = "/login";
-      }
+      console.warn("Unauthorized: ", error.response.data);
+      // Aquí podrías agregar alguna lógica para desloguear si el token está expirado
+      // Por ejemplo, podrías llamar a una función de logout del contexto de autenticación
     }
     return Promise.reject(error);
   }

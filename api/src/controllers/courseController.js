@@ -299,23 +299,20 @@ const removeStudentFromCourse = async (req, res) => {
 };
 
 const assignCourseToUser = async (req, res) => {
-  const { courseId } = req.params; // Obtener el ID del curso de los parámetros
-  const { userId } = req.body; // Obtener el ID del usuario del cuerpo de la solicitud
+  const { courseId } = req.params;
+  const { userId } = req.body;
 
   try {
-    // Buscar el curso por ID
     const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    // Buscar el usuario por su ID
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Verificar si el curso ya está asignado al usuario
     if (user.courses.includes(courseId)) {
       return res.status(400).json({
         message:
@@ -323,18 +320,13 @@ const assignCourseToUser = async (req, res) => {
       });
     }
 
-    // Asignar el curso al usuario
     user.courses.push(courseId);
+    course.students.push(userId);
 
-    // Aumentar el contador de participantes en el curso
-    course.students.push(userId); // También agregar el usuario a la lista de estudiantes del curso
-
-    // Guardar los cambios tanto en el usuario como en el curso
     await user.save();
     await course.save();
 
-    // Después de guardar, populamos los estudiantes en el curso para obtener el email
-    await course.populate("students", "email name"); // Popular los estudiantes con sus emails y nombres
+    await course.populate("students", "email name");
 
     res
       .status(200)

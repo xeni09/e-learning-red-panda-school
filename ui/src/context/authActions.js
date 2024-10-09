@@ -1,11 +1,9 @@
-export const loginUser = async (token, setIsAuthenticated, setUser) => {
+export const loginUser = async (setIsAuthenticated, setUser) => {
   try {
     // Llamar a la API para verificar el token y obtener los datos del usuario
     const response = await fetch("http://localhost:3000/api/auth/verifyToken", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: "include", // Incluir cookies en la solicitud
     });
 
     if (response.ok) {
@@ -29,9 +27,18 @@ export const loginUser = async (token, setIsAuthenticated, setUser) => {
   }
 };
 
-export const logoutUser = (setIsAuthenticated, setUser) => {
-  setIsAuthenticated(false);
-  setUser(null);
-  localStorage.removeItem("token"); // Elimina solo el token de `localStorage`
-  localStorage.setItem("isAuthenticated", "false"); // Actualiza el estado de autenticación
+export const logoutUser = async (setIsAuthenticated, setUser) => {
+  try {
+    // Llamar al backend para eliminar la cookie de sesión
+    await fetch("http://localhost:3000/api/auth/logout", {
+      method: "POST",
+      credentials: "include", // Incluir cookies en la solicitud
+    });
+  } catch (error) {
+    console.error("Failed to log out:", error);
+  } finally {
+    // Actualiza el estado global después de cerrar sesión
+    setIsAuthenticated(false);
+    setUser(null);
+  }
 };

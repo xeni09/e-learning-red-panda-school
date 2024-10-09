@@ -35,7 +35,7 @@ const SectionItem = ({ section, onEditClick, onDeleteClick, onSaveClick }) => {
   : videoId
   ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
   : section.sectionImage
-  ? `${baseUrl}/uploads/sections${section.sectionImage}`
+  ? `${baseUrl}${section.sectionImage}` 
   : 'https://via.placeholder.com/150?text=No+sectionImage';
 
 

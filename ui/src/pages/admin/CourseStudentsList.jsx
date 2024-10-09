@@ -175,15 +175,18 @@ const handleAddUserToCourse = async () => {
 
   </div>
 ) : (
+
+          // Si no hay estudiantes registrados
           <div className="bg-white p-10">
 
-            <div className="flex justify-between items-center mb-6">
-            <p className="text-3xl font-normal pb-4">Students Registered for the Course:</p>
+            <div>
+            <p className="sm:text-3xl text-xl pb-5">Students Registered for the Course:</p>
             <Link to={`/admin/manage-courses/${courseId}`}>
-              <h2 className="flex justify-start text-3xl font-bold text-[var(--color-orange)] cursor-pointer">
-                "{courseName}"
-                <span className="pl-4 text-xs pt-6">Click here to go back to this Course Info</span>
-              </h2>
+            <h2 className="font-bold text-[var(--color-orange)] cursor-pointer">
+            "{courseName}"
+            </h2>
+            <p className="pl-4 text-sm text-[var(--color-orange)] ">*Click here to go back</p>
+           
             </Link>
       </div>
 
